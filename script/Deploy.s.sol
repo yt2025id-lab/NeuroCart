@@ -4,21 +4,22 @@ pragma solidity ^0.8.19;
 // =============================================================================
 // Deploy.s.sol — Deployment Script (Foundry)
 //
-// Cara deploy ke Arbitrum Sepolia:
+// Deploy ke BASE SEPOLIA (chain ID 84532):
 //
 //   forge script script/Deploy.s.sol \
-//     --rpc-url https://sepolia-rollup.arbitrum.io/rpc \
+//     --rpc-url https://sepolia.base.org \
 //     --broadcast \
 //     --verify \
+//     --verifier-url https://api-sepolia.basescan.org/api \
+//     --etherscan-api-key $BASESCAN_API_KEY \
 //     -vvvv
 //
 // Butuh env vars di .env:
 //   PRIVATE_KEY=0x...
-//   ARBSEP_RPC_URL=https://sepolia-rollup.arbitrum.io/rpc
-//   ETHERSCAN_API_KEY=...  (untuk --verify)
-//   FUNCTIONS_SUBSCRIPTION_ID=...
+//   FUNCTIONS_SUBSCRIPTION_ID=...   (buat di https://functions.chain.link → Base Sepolia)
+//   BASESCAN_API_KEY=...            (opsional, untuk --verify)
 //
-// Setelah deploy, update contracts.py dengan address yang keluar
+// Setelah deploy, update contracts.py dan frontend/.env.local
 // =============================================================================
 
 import {Script, console} from "forge-std/Script.sol";
@@ -30,25 +31,25 @@ import {NeuroCartAutomation} from "../src/NeuroCartAutomation.sol";
 contract Deploy is Script {
 
     // =========================================================================
-    // CHAINLINK ADDRESSES — ARBITRUM SEPOLIA
-    // Verify semua address di: https://docs.chain.link/
+    // CHAINLINK ADDRESSES — BASE SEPOLIA (chain ID 84532)
+    // Verify: https://docs.chain.link/chainlink-functions/supported-networks
     // =========================================================================
 
-    // ETH/USD Price Feed (Arbitrum Sepolia)
-    // https://docs.chain.link/data-feeds/price-feeds/addresses?network=arbitrum&page=1
-    address constant ETH_USD_FEED = 0xd30e2101a97dcbAeBCBC04F14C3f624E67A35165;
+    // ETH/USD Price Feed (Base Sepolia)
+    // https://docs.chain.link/data-feeds/price-feeds/addresses?network=base
+    address constant ETH_USD_FEED = 0x4aDC67696bA383F43DD60A9e78F2C97Fbbfc7cb1;
 
-    // Chainlink Functions Router (Arbitrum Sepolia)
-    // VERIFY address sebelum deploy: https://docs.chain.link/chainlink-functions/supported-networks
-    // Ganti dengan address yang tepat dari docs Chainlink
+    // Chainlink Functions Router (Base Sepolia) — same address as Arbitrum Sepolia
+    // https://docs.chain.link/chainlink-functions/supported-networks
     address constant FUNCTIONS_ROUTER = 0xf9B8fc078197181C841c296C876945aaa425B278;
 
-    // DON ID untuk Arbitrum Sepolia (fun-arbitrum-sepolia-1)
-    bytes32 constant DON_ID = 0x66756e2d617262697472756d2d7365706f6c69612d3100000000000000000000;
+    // DON ID untuk Base Sepolia (fun-base-sepolia-1)
+    // hex encode of "fun-base-sepolia-1" padded to bytes32
+    bytes32 constant DON_ID = 0x66756e2d626173652d7365706f6c69612d310000000000000000000000000000;
 
-    // USDC di Arbitrum Sepolia
+    // USDC di Base Sepolia (Circle official — sudah dipakai di x402 demo_client.py)
     // https://developers.circle.com/stablecoins/usdc-on-test-networks
-    address constant USDC_ARBITRUM_SEPOLIA = 0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d;
+    address constant USDC_BASE_SEPOLIA = 0x036CbD53842c5426634e7929541eC2318f3dCF7e;
 
     // =========================================================================
     // DEPLOY
@@ -63,7 +64,7 @@ contract Deploy is Script {
 
         console.log("=== NEUROCART DEPLOYMENT ===");
         console.log("Deployer:", deployer);
-        console.log("Network: Arbitrum Sepolia");
+        console.log("Network: Base Sepolia (chainId 84532)");
         console.log("Subscription ID:", subscriptionId);
 
         vm.startBroadcast(deployerPrivateKey);
@@ -76,7 +77,7 @@ contract Deploy is Script {
         JobEscrow escrow = new JobEscrow(
             address(registry),
             deployer,
-            USDC_ARBITRUM_SEPOLIA
+            USDC_BASE_SEPOLIA
         );
         console.log("JobEscrow deployed:", address(escrow));
 

@@ -704,7 +704,7 @@ export default function Home() {
             ))}
           </div>
           <span style={{ fontSize: "11px", color: "#2a2a2a", fontFamily: "monospace" }}>
-            NeuroCart v2.0 · Arbitrum Sepolia
+            NeuroCart v2.0 · Base Sepolia
           </span>
         </div>
 
