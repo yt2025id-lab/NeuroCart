@@ -1,8 +1,8 @@
 {
   "_comment": "NeuroCart CRE Workflow Configuration — update addresses after deployment",
   "schedule": "*/1 * * * *",
-  "jobEscrowAddress": "FILL_IN_AFTER_DEPLOY",
-  "functionsAddress": "FILL_IN_AFTER_DEPLOY",
+  "jobEscrowAddress": "0xff8D57C82ddB6987DeCCe533DFE1799f880eCa75",
+  "functionsAddress": "0xF731654e94D8385960f83c916cCE26b3948b3dDA",
   "chainId": 84532,
   "chainSelector": "10344971235874465080",
   "rpcUrl": "https://sepolia.base.org",
